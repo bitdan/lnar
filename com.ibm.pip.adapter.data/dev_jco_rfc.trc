@@ -1,0 +1,88 @@
+
+**** Error file opened at 20200428 220348 China Standard Time Rel 3.0.8 (2011-11-28) [720.114]
+Error:  >Tue Apr 28 22:03:48,756<    >RfcGetException rc (3) message: CPIC-CALL: CMRCV on convId: 92779831
+
+ERROR       connection to partner '153.95.192.113:3310' broken
+TIME        Tue Apr 28 22:03:48 2020
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -6
+MODULE      nixxi.cpp
+LINE        4604
+DETAIL      NiIWrite: P=153.95.192.113:3310; L=192.168.14.15:51076
+SYSTEM CALL WSASend
+ERRNO       10054
+ERRNO TEXT  WSAECONNRESET: Connection reset by peer
+COUNTER     3
+
+<RfcGetException
+
+Error: [2] >Tue Apr 28 22:03:48,760<    RfcException: [STD|sdal05v113]
+    message: CPIC-CALL: CMRCV on convId: 92779831
+
+ERROR       connection to partner '153.95.192.113:3310' broken
+TIME        Tue Apr 28 22:03:48 2020
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -6
+MODULE      nixxi.cpp
+LINE        4604
+DETAIL      NiIWrite: P=153.95.192.113:3310; L=192.168.14.15:51076
+SYSTEM CALL WSASend
+ERRNO       10054
+ERRNO TEXT  WSAECONNRESET: Connection reset by peer
+COUNTER     3
+
+    Return code: RFC_SYS_EXCEPTION(3)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+Exception raised by STD|sdal05v113
+
+Error:  >Wed Apr 29 08:38:24,789<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ABAP_AS_POOL ASHOST=153.95.192.113 SYSNR=10 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '153.95.192.113:3310' not reached
+TIME        Wed Apr 29 08:38:24 2020
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3286
+DETAIL      NiPConnect2: 153.95.192.113:3310
+SYSTEM CALL connect
+ERRNO       10065
+ERRNO TEXT  WSAEHOSTUNREACH: No route to host
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+
+Error:  >Wed Apr 29 08:38:24,790<    RfcException: [null]
+    message: Connect to SAP gateway failed
+Connection parameters: TYPE=A DEST=ABAP_AS_POOL ASHOST=153.95.192.113 SYSNR=10 PCS=1
+
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '153.95.192.113:3310' not reached
+TIME        Wed Apr 29 08:38:24 2020
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3286
+DETAIL      NiPConnect2: 153.95.192.113:3310
+SYSTEM CALL connect
+ERRNO       10065
+ERRNO TEXT  WSAEHOSTUNREACH: No route to host
+COUNTER     2
+
+    Return code: RFC_FAILURE(1)
+    error group: 102
+    key: RFC_ERROR_COMMUNICATION
+

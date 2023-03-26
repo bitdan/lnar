@@ -1,0 +1,332 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+	<!-- COMMON CONFIGURE SECTION -->
+	<Common>
+		<LoadSequence>
+		ESBSpring,
+		Log4j,
+		ConfigDaemon,
+		MQMsgRef,
+		DataBuffer,
+		ErrorHandler,
+		DBPool,
+		CacheManager,
+		Formatter,
+		ReceiveBuffer,
+		SendBuffer,
+		OpSendBuffer,
+		SyncSendBuffer,
+		MQServer.MsgReceive,
+		MQServer.MsgSend,
+		MQServer.MsgOpSend,
+		MQServer.SyncDataReceive,
+		MQServer.SyncDataSend,
+		DataHandlerPool,
+		Timer
+		</LoadSequence>
+		<ConstantDefinitionFile>./config/adapter.properties</ConstantDefinitionFile>
+	</Common>
+	<!-- 命令行接收节点(系统必须),CorrelationId每个适配器运行实例必须不一样,与MonitorDaemon必须不一样 -->
+	<ConfigDaemon srvtype='CommandService'>
+		<ClassName>com.ibm.pip.framework.config.MIConfigDaemon</ClassName>
+		<HostName>${MQ_SERVER_IP_OUT}</HostName>
+		<Port>${MQ_SERVER_PORT_OUT}</Port>
+		<Channel>${MQ_SERVER_CHANNEL_OUT}</Channel>
+		<CCSID>${MQ_SERVER_CCSID_OUT}</CCSID>
+		<QueueManager>${MQ_SERVER_QMANAGER_OUT}</QueueManager>
+		<CommandQueue>${ADAPTER_CONFIG_REQUEST_QUEUE}</CommandQueue>
+		<ResultQueue>${ADAPTER_CONFIG_RESPONSE_QUEUE}</ResultQueue>
+		<CorrelationId>${CORRELATIONID}</CorrelationId>
+		<ConnectMQTryCount>5</ConnectMQTryCount>
+		<ConnectMQTryInterval>10</ConnectMQTryInterval>
+		<GetMQMessageTimeout>5</GetMQMessageTimeout>
+	</ConfigDaemon>
+	<!-- 后台管理命令接收节点(系统必须),CorrelationId每个适配器运行实例必须不一样,与ConfigDaemon必须不一样 -->
+	<MonitorDaemon srvtype='CommandService'>
+		<ClassName>com.ibm.pip.framework.monitordaemon.MonitorDaemon</ClassName>
+		<HostName>${MQ_SERVER_IP_OUT}</HostName>
+		<Port>${MQ_SERVER_PORT_OUT}</Port>
+		<Channel>${MQ_SERVER_CHANNEL_OUT}</Channel>
+		<CCSID>${MQ_SERVER_CCSID_OUT}</CCSID>
+		<QueueManager>${MQ_SERVER_QMANAGER_OUT}</QueueManager>
+		<RequestQueue>${ADAPTER_MONITOR_REQUEST_QUEUE}</RequestQueue>
+		<ResponseQueue>${ADAPTER_MONITOR_RESPONSE_QUEUE}</ResponseQueue>
+		<TransQueue>${IBM_PIP_ADAPTER_TRANS_QUEUE}</TransQueue>
+		<MonitorReqQueue>${IBM_SERVICE_MONITOR_REQUEST_QUEUE}</MonitorReqQueue>
+		<MonitorResQueue>${IBM_SERVICE_MONITOR_RESPONSE_QUEUE}</MonitorResQueue>
+		<CorrelationId>${CORRELATIONID}</CorrelationId>
+		<ConnectMQTryCount>5</ConnectMQTryCount>
+		<ConnectMQTryInterval>10</ConnectMQTryInterval>
+		<GetMQMessageTimeout>5</GetMQMessageTimeout>
+	</MonitorDaemon>
+	<ErrorHandler>
+		<ClassName>com.ibm.pip.framework.errorhandler.MIErrorHandler</ClassName>
+		<HostName>${MQ_SERVER_IP_OUT}</HostName>
+		<Port>${MQ_SERVER_PORT_OUT}</Port>
+		<Channel>${MQ_SERVER_CHANNEL_OUT}</Channel>
+		<CCSID>${MQ_SERVER_CCSID_OUT}</CCSID>
+		<QueueManager>${MQ_SERVER_QMANAGER_OUT}</QueueManager>
+		<ErrorMessageQueue>${ERRORHANDLER_ERRORMESSAGE_QUEUE}</ErrorMessageQueue>
+		<ConnectMQTryCount>5</ConnectMQTryCount>
+		<ConnectMQTryInterval>10</ConnectMQTryInterval>
+		<GetMQMessageTimeout>5</GetMQMessageTimeout>
+		<MsgExpiry>86400</MsgExpiry>
+	</ErrorHandler>
+	<ESBSpring>
+		<ClassName>com.ibm.pip.framework.spring.EsbSpring</ClassName>
+		<Switch>ON</Switch>
+	</ESBSpring>
+	<!-- 日志节点(系统必须) -->
+	<Log4j srvtype='LogService'>
+		<ClassName>com.ibm.pip.util.log.Log</ClassName>
+		<ConfigureFile>${LOG4J_FILE}</ConfigureFile>
+		<LibraryFile>${CODE_MAPPING_FILE}</LibraryFile>
+		<Encoding>${LOG4J_ENCODING}</Encoding>
+		
+		<!--0,默认无分类日志;1,交易分机构日志;2,交易分服务日志;3,交易分柜员日志-->
+		<LogType>3</LogType>
+		<Logger>StdLog</Logger>
+		<AdapterSysLogger>SysLog</AdapterSysLogger>
+		<PerformanceLogger>PerLog</PerformanceLogger>
+		<RecordLogger>RecLog</RecordLogger>
+		<DaemonLogger>DaeLog</DaemonLogger>
+		<BizLogger>BizLog</BizLogger>
+	</Log4j>
+	<!-- Daemon Heart Parameter -->
+	<Heart>
+		<LogInterval>600</LogInterval>
+		<LogContent>Daemon is running normally.</LogContent>
+	</Heart>
+	<!-- CacheManager LodMode: 0 Lazy Mode, 1 ActiveMode -->
+	<DBPool>
+		<ClassName>com.ibm.pip.framework.cache.dbi.ConnectionPool</ClassName>
+		<DataSource></DataSource>
+		<ProviderURL></ProviderURL>
+		<CtxFactory></CtxFactory>
+		<Driver>${DBPOOL_DRIVER}</Driver>
+		<DBURL>${DBPOOL_DBURL}</DBURL>
+		<User>${DBPOOL_USER}</User>
+		<PWD>${DBPOOL_PWD}</PWD>
+		<DBURL1>${DBPOOL_DBURL1}</DBURL1>
+		<User1>${DBPOOL_USER1}</User1>
+		<PWD1>${DBPOOL_PWD1}</PWD1>
+		<SEQUENCE></SEQUENCE>
+		<MaxNum>${DBPOOL_MAXNUM}</MaxNum>
+		<InitNum>${DBPOOL_INITNUM}</InitNum>
+		<TestTableName>${DBPOOL_TESTTABLENAME}</TestTableName>
+	</DBPool>
+	
+	<IbatisDBPool>
+		<DataSource></DataSource>
+		<ProviderURL></ProviderURL>
+		<CtxFactory></CtxFactory>
+		<!-- Oracle 相关配置 -->
+		<Driver>${DBPOOL_DRIVER}</Driver>
+		<DBURL>${DBPOOL_DBURL}</DBURL>
+		<User>${DBPOOL_USER}</User>
+		<PWD>${DBPOOL_PWD}</PWD>
+		<SEQUENCE>${SEQUENCE}</SEQUENCE>
+		<MaxNum>${DBPOOL_MAXNUM}</MaxNum>
+		<InitNum>${DBPOOL_INITNUM}</InitNum>
+		<TestTableName>${DBPOOL_TESTTABLENAME}</TestTableName>
+	</IbatisDBPool>
+	
+	<IbatisDBPool1>
+		<DataSource></DataSource>
+		<ProviderURL></ProviderURL>
+		<CtxFactory></CtxFactory>
+		<!-- Oracle 相关配置 -->
+		<Driver>${DBPOOL_DRIVER}</Driver>
+		<DBURL>${DBPOOL_DBURL1}</DBURL>
+		<User>${DBPOOL_USER1}</User>
+		<PWD>${DBPOOL_PWD1}</PWD>
+		<SEQUENCE>${SEQUENCE}</SEQUENCE>
+		<MaxNum>${DBPOOL_MAXNUM}</MaxNum>
+		<InitNum>${DBPOOL_INITNUM}</InitNum>
+		<TestTableName>${DBPOOL_TESTTABLENAME}</TestTableName>
+	</IbatisDBPool1>
+	
+	
+	<ReceiveBuffer>
+		<ClassName>com.ibm.pip.adapter.buffer.ESBMsgBuffer</ClassName>
+		<BufferSize>${ReceiveBuffer_BufferSize}</BufferSize>
+	</ReceiveBuffer>
+	<SendBuffer>
+		<ClassName>com.ibm.pip.adapter.buffer.ESBMsgBuffer</ClassName>
+		<BufferSize>${SendBuffer_BufferSize}</BufferSize>
+	</SendBuffer>
+	<OpSendBuffer>
+		<ClassName>com.ibm.pip.adapter.buffer.ESBMsgBuffer</ClassName>
+		<BufferSize>${SendBuffer_BufferSize}</BufferSize>
+	</OpSendBuffer>
+	<SyncSendBuffer>
+		<ClassName>com.ibm.pip.adapter.buffer.ESBMsgBuffer</ClassName>
+		<BufferSize>${SendBuffer_BufferSize}</BufferSize>
+	</SyncSendBuffer>
+	
+
+	<Formatter>
+		<ClassName>com.ibm.pip.adapter.data.formatter.DataFormatter</ClassName>
+		<!--数据格式化组件的编码方式-->
+		<Encoding>UTF-8</Encoding>
+		<ESBServiceOrg>
+			<S0003>com.ibm.pip.lccommon.formatter.EsbServiceHeader</S0003>
+		</ESBServiceOrg>
+	</Formatter>
+	
+	<!--业务处理线程配置，请求方-->
+	<DataHandlerPool>
+	  <ClassName>com.ibm.pip.adapter.data.handler.DataHandlerPool</ClassName>
+		<HandlerClassName>com.ibm.pip.adapter.data.handler.DataHandler</HandlerClassName>
+		<HandlerNum>${HandlerPool_HandlerNum}</HandlerNum>
+		<StopWaitTime>10</StopWaitTime>
+	</DataHandlerPool>
+
+ 	<!-- CacheManager LodMode: 0 Lazy Mode, 1 ActiveMode -->
+  	<CacheManager>
+		<ClassName>com.ibm.pip.framework.cache.BaseCacheManager</ClassName>
+		<Host>0001</Host>
+		<LoadMode>1</LoadMode>
+	</CacheManager>
+	<MQMsgRef>
+		<ClassName>com.ibm.pip.framework.messageobject.MQMsgRef</ClassName>
+	</MQMsgRef>
+	<DataBuffer>
+		<ClassName>com.ibm.pip.framework.buffer.MsgBuffer</ClassName>
+	</DataBuffer>
+
+	
+
+	<MQServer>
+	 	<MsgReceive>
+			<ClassName>com.ibm.pip.adapter.connection.mqserver.MIMQMsgReceive</ClassName>
+			<HostName>${MQ_SERVER_IP_OUT}</HostName>
+			<Port>${MQ_SERVER_PORT_OUT}</Port>
+			<Channel>${MQ_SERVER_CHANNEL_OUT}</Channel>
+			<CCSID>${MQ_SERVER_CCSID_OUT}</CCSID>
+			<QueueManager>${MQ_SERVER_QMANAGER_OUT}</QueueManager>
+			<Queue>${MQServer_MsgReceive_Queue}</Queue>
+			<ConnectMQTryCount>5</ConnectMQTryCount>
+			<ConnectMQTryInterval>10</ConnectMQTryInterval>
+			<GetMQMessageTimeout>5</GetMQMessageTimeout>
+			<Buffer>ReceiveBuffer</Buffer>
+			<ServiceRequest>
+				<MessageType>2</MessageType>
+				<OrginalCon>MQServer</OrginalCon>
+				<TargetCon>DATA</TargetCon>
+			</ServiceRequest>
+		</MsgReceive>
+		<MsgSend>
+			<ClassName>com.ibm.pip.adapter.connection.mqserver.MIMQMsgSend</ClassName>
+				<HostName>${MQ_SERVER_IP_OUT}</HostName>
+				<Port>${MQ_SERVER_PORT_OUT}</Port>
+				<Channel>${MQ_SERVER_CHANNEL_OUT}</Channel>
+				<CCSID>${MQ_SERVER_CCSID_OUT}</CCSID>
+				<QueueManager>${MQ_SERVER_QMANAGER_OUT}</QueueManager>
+				<Queue>${MQServer_MsgSend_Queue}</Queue>
+				<ConnectMQTryCount>5</ConnectMQTryCount>
+				<ConnectMQTryInterval>10</ConnectMQTryInterval>
+				<GetMQMessageTimeout>5</GetMQMessageTimeout>
+				<Buffer>SendBuffer</Buffer>
+		</MsgSend>
+		<MsgOpSend>
+			<ClassName>com.ibm.pip.adapter.connection.mqserver.MIMQMsgSend</ClassName>
+				<HostName>${MQ_SERVER_IP_OUT}</HostName>
+				<Port>${MQ_SERVER_PORT_OUT}</Port>
+				<Channel>${MQ_SERVER_CHANNEL_OUT}</Channel>
+				<CCSID>${MQ_SERVER_CCSID_OUT}</CCSID>
+				<QueueManager>${MQ_SERVER_QMANAGER_OUT}</QueueManager>
+				<Queue>${MQServer_Operation_Queue}</Queue>
+				<ConnectMQTryCount>5</ConnectMQTryCount>
+				<ConnectMQTryInterval>10</ConnectMQTryInterval>
+				<GetMQMessageTimeout>5</GetMQMessageTimeout>
+				<Buffer>OpSendBuffer</Buffer>
+		</MsgOpSend>
+		<SyncDataReceive>
+			<ClassName>com.ibm.pip.adapter.connection.mqserver.MIMQMsgReceive</ClassName>
+			<HostName>${MQ_SERVER_IP_IN}</HostName>
+			<Port>${MQ_SERVER_PORT_IN}</Port>
+			<Channel>${MQ_SERVER_CHANNEL_IN}</Channel>
+			<CCSID>${MQ_SERVER_CCSID_IN}</CCSID>
+			<QueueManager>${MQ_SERVER_QMANAGER_IN}</QueueManager>
+			<Queue>${MQServer_SyncData_Queue}</Queue>
+			<ConnectMQTryCount>5</ConnectMQTryCount>
+			<ConnectMQTryInterval>10</ConnectMQTryInterval>
+			<GetMQMessageTimeout>5</GetMQMessageTimeout>
+			<Buffer>ReceiveBuffer</Buffer>
+			<ServiceRequest>
+				<MessageType>2</MessageType>
+				<OrginalCon>SyncDataReceive</OrginalCon>
+				<TargetCon>DATA</TargetCon>
+			</ServiceRequest>
+		</SyncDataReceive>
+		<SyncDataSend>
+			<ClassName>com.ibm.pip.adapter.connection.mqserver.MIMQMsgSend</ClassName>
+				<HostName>${MQ_SERVER_IP_IN}</HostName>
+				<Port>${MQ_SERVER_PORT_IN}</Port>
+				<Channel>${MQ_SERVER_CHANNEL_IN}</Channel>
+				<CCSID>${MQ_SERVER_CCSID_IN}</CCSID>
+				<QueueManager>${MQ_SERVER_QMANAGER_IN}</QueueManager>
+				<Queue>${MQ_SendQueue}</Queue>
+				<ConnectMQTryCount>5</ConnectMQTryCount>
+				<ConnectMQTryInterval>10</ConnectMQTryInterval>
+				<GetMQMessageTimeout>5</GetMQMessageTimeout>
+				<Buffer>SyncSendBuffer</Buffer>
+		</SyncDataSend>
+	</MQServer>
+	
+
+	<!--客户端配置-->
+	<ConnectionManage>
+		<MCS_MQ>com.ibm.pip.adapter.connection.mqclient.MQConnectionManage</MCS_MQ>
+	</ConnectionManage>
+
+	
+	
+	<MCS_MQConnectionPool>
+		<ClassName>com.ibm.pip.adapter.connection.mqclient.MQConnectionPool</ClassName>
+		<Capability>${MQ_Capability}</Capability>
+		<Timeout>30</Timeout>
+	</MCS_MQConnectionPool>
+
+	<!--请求方客户端配置-->
+	<MCS_MQConnection>
+		<!-- 修改 -->
+		<ClassName>com.ibm.pip.adapter.connection.mqclient.MIMQPubConnection</ClassName>
+		<Mode>0</Mode>
+		<SendQueue>
+			<HostName>${MQ_SERVER_IP_IN}</HostName>
+			<Port>${MQ_SERVER_PORT_IN}</Port>
+			<Channel>${MQ_SERVER_CHANNEL_IN}</Channel>
+			<CCSID>${MQ_SERVER_CCSID_IN}</CCSID>
+			<QueueManager>${MQ_SERVER_QMANAGER_IN}</QueueManager>
+			<Queue>${MQ_SendQueue}</Queue>
+			<ConnectMQTryCount>5</ConnectMQTryCount>
+			<ConnectMQTryInterval>10</ConnectMQTryInterval>
+			<GetMQMessageTimeout>40</GetMQMessageTimeout>
+		</SendQueue>
+	</MCS_MQConnection>
+
+	
+	
+	<Timer>
+		<ClassName>com.ibm.pip.framework.timer.Timer</ClassName>
+		<JobClass>com.ibm.pip.adapter.data.timer.TableDataTimer</JobClass>
+		<TimerName>DataTimer</TimerName>
+		<TimerCron>${Time}</TimerCron>
+	</Timer>
+	
+	
+	<!--公共信息配置-->
+	<Adapter>
+		<Name>Data</Name>
+		<SYSID>0003</SYSID>
+		<INSTID>1</INSTID>
+		<CityCode>00</CityCode>
+		<CHANNELID>05</CHANNELID>
+		<PMKVALID>N</PMKVALID>		
+		<KEY_LABEL>0000</KEY_LABEL>
+		<T_KEY_LABEL>00</T_KEY_LABEL>
+		<Print16>N</Print16>
+	</Adapter>	
+</Configuration>

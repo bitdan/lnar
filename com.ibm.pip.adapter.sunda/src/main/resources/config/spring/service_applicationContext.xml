@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx-2.0.xsd" default-autowire="byName" default-lazy-init="false">
+
+	<bean id="S00010000000002"
+		class="com.ibm.pip.adapter.sunda.bean.ReqService"
+		scope="prototype" destroy-method="cleanup">
+		<description></description>
+	</bean> 
+	
+	<bean id="S00010000000001"
+		class="com.ibm.pip.adapter.sunda.bean.ReqPostService"
+		scope="prototype" destroy-method="cleanup">
+		<description></description>
+	</bean>
+
+
+
+
+	<!-- 公共数据访问对象 -->
+	<bean id="dynamicDataSource" class="com.ibm.pip.util.DynamicDataSource" >
+     <!-- 通过key-value的形式来关联数据源 -->
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry value-ref="dataSourceA" key="dataSourceA"></entry>
+				<entry value-ref="dataSourceB" key="dataSourceB"></entry>
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="dataSourceA" >
+		</property>
+	</bean> 
+	
+	<bean id="dataSourceA" class="com.ibm.pip.lccommon.db.DataSourceHelper" lazy-init="false">
+		<constructor-arg>
+			<value>IbatisDBPool</value>
+		</constructor-arg>
+	</bean>
+	
+	<bean id="dataSourceB" class="com.ibm.pip.lccommon.db.DataSourceHelper" lazy-init="false">
+		<constructor-arg>
+			<value>IbatisDBPool1</value>
+		</constructor-arg>
+	</bean>
+
+	<!-- 配置SqlMapClient -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" autowire="byName">
+		<property name="configLocation">
+		  <value>classpath:config/sql-mapconfig/framework-sqlMapConfig.xml</value>
+		</property>
+		<property name="lobHandler">
+		 <ref bean="lobHandler"/>
+		</property>
+	</bean>
+	
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" />
+	
+	<!-- 配置sqlMapTemplate -->
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="dataSource" ref="dynamicDataSource"></property>
+		<property name="sqlMapClient" ref="sqlMapClient"></property>
+	</bean>
+	
+
+	
+	<!-- 公共数据访问对象 -->
+	<bean id="commondao" class="com.ibm.pip.lccommon.db.CommonDao">
+		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate"></property>
+	</bean>
+</beans>

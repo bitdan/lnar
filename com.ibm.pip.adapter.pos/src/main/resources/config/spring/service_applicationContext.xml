@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx" xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	       http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+           http://www.springframework.org/schema/aop 
+           http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx-2.0.xsd" default-autowire="byName" default-lazy-init="true">
+	
+	<bean id="S00020000000002" class="com.ibm.pip.adapter.rest.bean.RestService" scope="prototype" destroy-method="cleanup">
+		<description>pos 正常rest 交易</description>
+	</bean>
+	
+		
+	<bean id="S00020000000001" class="com.ibm.pip.adapter.rest.bean.RestSapService" scope="prototype" destroy-method="cleanup">
+		<description>sap 正常rest同步返回</description>
+	</bean>
+	
+	
+	<bean id="S00020000000004" class="com.ibm.pip.adapter.rest.bean.RestService" scope="prototype" destroy-method="cleanup">
+		<description>pos 请求 数据同步</description>
+	</bean>
+
+	
+		
+	<bean id="S10020000000003" class="com.ibm.pip.adapter.rest.bean.RestDataService" scope="prototype" destroy-method="cleanup">
+		<description>数据异步返回</description>
+	</bean>
+	
+	
+	<!-- 公共数据访问对象 -->
+	<bean id="dataSource" class="com.ibm.pip.lccommon.db.DataSourceHelper" lazy-init="false">
+		<constructor-arg>
+			<value>IbatisDBPool</value>
+		</constructor-arg>
+	</bean>
+	
+	
+
+	<!-- 配置SqlMapClient -->
+	<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean" autowire="byName">
+		<property name="configLocation">
+		  <value>classpath:config/sql-mapconfig/framework-sqlMapConfig.xml</value>
+		</property>
+		<property name="lobHandler">
+		 <ref bean="lobHandler"/>
+		</property>
+	</bean>
+	
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.OracleLobHandler" />
+	
+	<!-- 配置sqlMapTemplate -->
+	<bean id="sqlMapClientTemplate" class="org.springframework.orm.ibatis.SqlMapClientTemplate">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="sqlMapClient" ref="sqlMapClient"></property>
+	</bean>
+	
+
+	
+	<!-- 公共数据访问对象 -->
+	<bean id="commondao" class="com.ibm.pip.lccommon.db.CommonDao">
+		<property name="sqlMapClientTemplate" ref="sqlMapClientTemplate"></property>
+	</bean>
+	
+	<bean id="propertyConfigurer"
+		class="com.ibm.pip.framework.spring.EsbSpringPropertyConfigurer">
+	</bean>
+	
+</beans>

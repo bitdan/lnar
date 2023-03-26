@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--SAP解析器：1.输入参字段映射 2.输出参日期时间格式化 -->
+<SAP>
+    <ADAPTER NAME="COMMONADAPTER" CLASS = "">
+    </ADAPTER>
+    <!-- 新增RFC接口需在此配置 -->
+    <Z_TR_PAYMENT_RETURN>
+        <!-- 输入 -->
+        <ImportParameter>
+            <Mapping>
+                <!--传入参数映射: content为SAP字段名-->
+                <RES_MSG>RES_MEG</RES_MSG>
+                <DATASOURCE>SOURCE</DATASOURCE>
+                <CURRENCYNO>WAERS_ORG</CURRENCYNO>
+                <PAYAMOUNT>RWBTR_ORG</PAYAMOUNT>
+                <ACT_PAY_MODE>RZAWE</ACT_PAY_MODE>
+                <ACT_PAY_DATE>BUDAT</ACT_PAY_DATE>
+                <ACT_PAYAMOUNT>RWBTR</ACT_PAYAMOUNT>
+                <ACT_CURRENCYNO>WAERS</ACT_CURRENCYNO>
+                <EXCH_RATE>KURSF</EXCH_RATE>
+                <RECE_ACC_NO>BANKN_ALL</RECE_ACC_NO>
+                <RECE_ACC_NAME>KOINH</RECE_ACC_NAME>
+                <CREATETIME>REDAT</CREATETIME>
+            </Mapping>
+        </ImportParameter>
+        <!-- 输出 -->
+        <ExportParameter>
+            <FILTER>
+
+            </FILTER>
+            <!-- 日期格式化  <BUDAT>yyyyMMdd</BUDAT> -->
+            <Date>
+            </Date>
+            <!-- 时间格式化  <CPUTM>HH:mm:ss</CPUTM> -->
+            <Time>
+            </Time>
+        </ExportParameter>
+    </Z_TR_PAYMENT_RETURN>
+    <Z_TR_BANKING_STATEMENT>
+        <ImportParameter>
+            <Mapping>
+            </Mapping>
+        </ImportParameter>
+        <ExportParameter>
+            <Date>
+                <BUDAT>yyyyMMdd</BUDAT>
+            </Date>
+            <Time>
+            </Time>
+        </ExportParameter>
+    </Z_TR_BANKING_STATEMENT>
+    <Z_TR_BILLRECORD>
+        <ImportParameter>
+        </ImportParameter>
+        <ExportParameter>
+        </ExportParameter>
+    </Z_TR_BILLRECORD>
+    <Z_TR_BANK_CREATE>
+        <ImportParameter>
+        </ImportParameter>
+        <ExportParameter>
+        </ExportParameter>
+    </Z_TR_BANK_CREATE>
+    <Z_TR_BANK_CHANGE>
+        <ImportParameter>
+        </ImportParameter>
+        <ExportParameter>
+        </ExportParameter>
+    </Z_TR_BANK_CHANGE>
+    <!-- 成本中心主数据接口（SAP->PS) -->
+    <Z_PS_GET_COSTCENTER>
+        <ImportParameter>
+        </ImportParameter>
+        <ExportParameter>
+            <Date>
+                <DATAB>yyyyMMdd</DATAB>
+                <DATBI>yyyyMMdd</DATBI>
+            </Date>
+        </ExportParameter>
+    </Z_PS_GET_COSTCENTER>
+</SAP>
