@@ -1,0 +1,8 @@
+com.ibm.pip.adapter.sunda/.idea/
+com.ibm.pip.adapter.sunda/log/
+com.ibm.pip.adapter.sunda/target/
+*.iml
+*.FDC
+com.ibm.pip.adapter.sunda/dev_jco_rfc.trc
+com.ibm.pip.adapter.data/.idea/
+com.ibm.pip.adapter.data/target/classes/
